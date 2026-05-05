@@ -45,7 +45,7 @@ export default function Diary() {
 
   return (
     <div>
-      <div className="bg-sky-500 text-white px-4 pt-10 pb-6">
+      <div className="bg-blue-900 text-white px-4 pt-10 pb-6">
         <h1 className="text-2xl font-semibold">Side effects diary</h1>
         <p className="text-sky-100 text-sm mt-1">Track how you feel daily</p>
       </div>

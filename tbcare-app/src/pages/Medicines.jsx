@@ -47,7 +47,7 @@ export default function Medicines() {
 
   return (
     <div>
-      <div className="bg-sky-500 text-white px-4 pt-10 pb-6">
+      <div className="bg-blue-900 text-white px-4 pt-10 pb-6">
         <h1 className="text-2xl font-semibold">Medicines</h1>
         <p className="text-sky-100 text-sm mt-1">Your TB treatment directory</p>
       </div>
