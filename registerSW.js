@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/tbcare-app/sw.js', { scope: '/tbcare-app/' })})}

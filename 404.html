@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>TB Care</title>
+    <script>
+      const path = window.location.pathname.slice('/tbcare-app'.length);
+      window.location.replace(
+        '/tbcare-app/?redirect=' + encodeURIComponent(path)
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
