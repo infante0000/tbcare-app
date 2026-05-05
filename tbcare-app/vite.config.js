@@ -33,6 +33,9 @@ export default defineConfig({
       },
 
       workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
+        
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         navigateFallback: '/tbcare-app/index.html',  // ← subpath here too
         navigateFallbackAllowlist: [/^\/tbcare-app/],
