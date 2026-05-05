@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator) navigator.serviceWorker.register('/tbcare-app/dev-sw.js?dev-sw', { scope: '/tbcare-app/', type: 'classic' })
