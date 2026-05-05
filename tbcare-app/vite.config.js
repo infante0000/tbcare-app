@@ -26,18 +26,8 @@ export default defineConfig({
         start_url: '/tbcare-app/',   // ← MUST have the /tbcare-app/ prefix
         scope: '/tbcare-app/',       // ← same here
         icons: [
-          {
-            src: 'icons/tbcare-icon.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any maskable'
-          },
-          {
-            src: 'icons/tbcare-icon.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable'
-          }
+          { src: 'icons/tbcare-icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+          { src: 'icons/tbcare-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
         ]
       },
 
