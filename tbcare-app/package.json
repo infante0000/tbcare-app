@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://infante0000.github.io/tbcare-app",
+  "homepage": "https://infante0000.github.io/tbcare-app/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
