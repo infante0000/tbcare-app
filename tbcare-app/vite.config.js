@@ -19,7 +19,7 @@ export default defineConfig({
         name: 'TB Care',
         short_name: 'TBCare',
         description: 'Tuberculosis treatment companion app',
-        theme_color: '#0ea5e9',
+        theme_color: '#0b5070',
         background_color: '#0f172a',
         display: 'standalone',
         orientation: 'portrait',
