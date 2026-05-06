@@ -58,6 +58,14 @@
 
 body {
   margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  @apply bg-slate-50 dark:bg-slate-900 transition-colors duration-200;
+}
+
+*, *::before, *::after {
+  transition-property: background-color, border-color, color;
+  transition-duration: 150ms;
 }
 
 #root {
