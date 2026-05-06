@@ -1,93 +1,76 @@
 import Dexie from 'dexie'
 
-// ─── CREATE DATABASE ───────────────────────────────────────────
 export const db = new Dexie('TBCareDB')
 
-db.version(1).stores({
-  // Medicine directory
-  // ++id = auto-increment primary key
-  medicines:
-    '++id, genericName, brandName, dosage, quantity, reminderEnabled',
-
-  // TB-DOTS clinic directory
-  clinics:
-    '++id, clinicName, address, contact, doctorName',
-
-  // Side effects diary
-  // tag: 'positive' | 'negative'
-  // severity: 'mild' | 'moderate' | 'severe'
-  diary:
-    '++id, date, notes, tag, severity, medicineId',
-
-  // Medication reminders
-  // type: 'dose' | 'refill' | 'test'
-  reminders:
-    '++id, medicineId, time, days, enabled, type',
-
-  // Scheduled events (refills, tests, appointments)
-  events:
-    '++id, name, date, adjusted',
-
-  // Test results history
-  tests:
-    '++id, testName, scheduledDate, result, notes',
-
-  // Daily dose logs (used for streak tracking)
-  logs:
-    '++id, medicineId, date, taken',
+db.version(2).stores({
+  medicines: '++id, genericName, brandName, dosage, quantity, reminderEnabled',
+  clinics:   '++id, clinicName, address, contact, doctorName',
+  diary:     '++id, date, notes, tag, severity, medicineId',
+  reminders: '++id, medicineId, time, days, enabled, type',
+  events:    '++id, name, date, adjusted, completed',
+  tests:     '++id, testName, scheduledDate, result, notes',
+  // date: YYYY-MM-DD, intakeQty: how many tablets taken in one sitting
+  logs:      '++id, medicineId, date, taken, intakeQty',
 })
 
 // ─── MEDICINE OPERATIONS ───────────────────────────────────────
 export const medicineOps = {
-  // Get all medicines
   getAll: () => db.medicines.toArray(),
 
-  // Add a new medicine
   add: (medicine) =>
     db.medicines.add({
       ...medicine,
-      quantity: medicine.quantity || 0,
-      totalQuantity: medicine.quantity || 0,
+      quantity:        medicine.quantity || 0,
+      totalQuantity:   medicine.quantity || 0,
+      intakeQty:       medicine.intakeQty || 1, // tablets per sitting
       reminderEnabled: false,
-      createdAt: new Date().toISOString(),
+      createdAt:       new Date().toISOString(),
     }),
 
-  // Update a medicine by id
+  // Full edit support
   update: (id, changes) => db.medicines.update(id, changes),
 
-  // Delete a medicine by id
   delete: (id) => db.medicines.delete(id),
 
-  // Call this when patient marks a dose as taken
-  // Reduces quantity by 1 and triggers low stock alert at 5 or below
-  decrementQuantity: async (id) => {
+  // Decrement by intakeQty (e.g. 3 tablets at once)
+  decrementQuantity: async (id, qty = 1) => {
     const med = await db.medicines.get(id)
-    if (med && med.quantity > 0) {
-      const newQty = med.quantity - 1
-      await db.medicines.update(id, { quantity: newQty })
-      return newQty
-    }
-    return 0
+    if (!med) return 0
+    const newQty = Math.max(0, (med.quantity || 0) - qty)
+    await db.medicines.update(id, { quantity: newQty })
+    return newQty
+  },
+
+  // Add quantity when refill is completed
+  addQuantity: async (id, qty) => {
+    const med = await db.medicines.get(id)
+    if (!med) return 0
+    const newQty = (med.quantity || 0) + qty
+    const newTotal = Math.max(med.totalQuantity || 0, newQty)
+    await db.medicines.update(id, {
+      quantity:      newQty,
+      totalQuantity: newTotal,
+    })
+    return newQty
   },
 }
 
 // ─── DIARY OPERATIONS ──────────────────────────────────────────
 export const diaryOps = {
-  // Get all entries, newest first
   getAll: () => db.diary.orderBy('date').reverse().toArray(),
 
-  // Get entries for a specific date (YYYY-MM-DD)
   getByDate: (date) => db.diary.where('date').equals(date).toArray(),
 
-  // Add a new diary entry
   add: (entry) =>
     db.diary.add({
       ...entry,
-      date: entry.date || new Date().toISOString().split('T')[0],
+      date:      entry.date || new Date().toISOString().split('T')[0],
       createdAt: new Date().toISOString(),
     }),
 
-  // Delete an entry by id
+  // Edit support
+  update: (id, changes) => db.diary.update(id, changes),
+
   delete: (id) => db.diary.delete(id),
 }
 
@@ -96,11 +79,9 @@ export const clinicOps = {
   getAll: () => db.clinics.toArray(),
 
   add: (clinic) =>
-    db.clinics.add({
-      ...clinic,
-      createdAt: new Date().toISOString(),
-    }),
+    db.clinics.add({ ...clinic, createdAt: new Date().toISOString() }),
 
+  // Edit support
   update: (id, changes) => db.clinics.update(id, changes),
 
   delete: (id) => db.clinics.delete(id),
@@ -108,19 +89,24 @@ export const clinicOps = {
 
 // ─── EVENT / SCHEDULE OPERATIONS ───────────────────────────────
 export const eventOps = {
-  // Get all events sorted by date ascending
   getAll: () => db.events.orderBy('date').toArray(),
 
-  add: (event) => db.events.add(event),
+  add: (event) => db.events.add({ ...event, completed: false }),
+
+  update: (id, changes) => db.events.update(id, changes),
 
   delete: (id) => db.events.delete(id),
 
-  // Get only upcoming events from today onwards
+  // Mark refill as done — also triggers quantity add in the page
+  complete: (id) => db.events.update(id, { completed: true }),
+
   getUpcoming: async () => {
     const today = new Date().toISOString().split('T')[0]
-    const all = await db.events.orderBy('date').toArray()
-    return all.filter((e) => e.date >= today)
+    const all   = await db.events.orderBy('date').toArray()
+    return all.filter((e) => e.date >= today && !e.completed)
   },
+
+  getAll_: () => db.events.orderBy('date').reverse().toArray(),
 }
 
 // ─── TEST RESULT OPERATIONS ────────────────────────────────────
@@ -131,7 +117,7 @@ export const testOps = {
     db.tests.add({
       ...test,
       scheduledDate: test.scheduledDate || new Date().toISOString().split('T')[0],
-      createdAt: new Date().toISOString(),
+      createdAt:     new Date().toISOString(),
     }),
 
   update: (id, changes) => db.tests.update(id, changes),
@@ -141,58 +127,57 @@ export const testOps = {
 
 // ─── DOSE LOG / STREAK OPERATIONS ─────────────────────────────
 export const logOps = {
-  // Check if a dose was already logged today for a specific medicine
-  alreadyLoggedToday: async (medicineId) => {
-    const today = new Date().toISOString().split('T')[0]
+  // Check if a specific medicine was already logged on a given date
+  alreadyLogged: async (medicineId, date) => {
     const existing = await db.logs
-      .where('date')
-      .equals(today)
+      .where('date').equals(date)
       .and((log) => log.medicineId === medicineId)
       .first()
     return !!existing
   },
 
-  // Log a dose as taken
-  logDose: (medicineId) =>
+  // Kept for backward compat
+  alreadyLoggedToday: async (medicineId) => {
+    const today = new Date().toISOString().split('T')[0]
+    return logOps.alreadyLogged(medicineId, today)
+  },
+
+  // Log a dose — supports any past date and custom intakeQty
+  logDose: (medicineId, date, intakeQty = 1) =>
     db.logs.add({
       medicineId,
-      date: new Date().toISOString().split('T')[0],
-      taken: true,
-      loggedAt: new Date().toISOString(),
+      date,
+      taken:     true,
+      intakeQty,
+      loggedAt:  new Date().toISOString(),
     }),
 
-  // Calculate current streak (consecutive days with at least 1 dose logged)
+  // Remove a log entry (undo)
+  removeLog: async (medicineId, date) => {
+    const log = await db.logs
+      .where('date').equals(date)
+      .and((l) => l.medicineId === medicineId)
+      .first()
+    if (log) await db.logs.delete(log.id)
+  },
+
   getStreak: async () => {
     const logs = await db.logs.orderBy('date').reverse().toArray()
     if (!logs.length) return 0
-
-    // Get unique dates only
     const uniqueDates = [...new Set(logs.map((l) => l.date))].sort().reverse()
-    if (!uniqueDates.length) return 0
-
-    let streak = 0
+    let streak  = 0
     let current = new Date()
     current.setHours(0, 0, 0, 0)
-
     for (const dateStr of uniqueDates) {
       const logDate = new Date(dateStr)
       logDate.setHours(0, 0, 0, 0)
-      const diffDays = Math.round(
-        (current - logDate) / (1000 * 60 * 60 * 24)
-      )
-
-      if (diffDays <= 1) {
-        streak++
-        current = logDate
-      } else {
-        break
-      }
+      const diff = Math.round((current - logDate) / 86400000)
+      if (diff <= 1) { streak++; current = logDate }
+      else break
     }
-
     return streak
   },
 
-  // Get logs for the last N days (for adherence chart)
   getLastNDays: async (n = 7) => {
     const dates = []
     for (let i = n - 1; i >= 0; i--) {
@@ -206,4 +191,7 @@ export const logOps = {
       taken: all.some((l) => l.date === date),
     }))
   },
+
+  // Get all logs for a specific date
+  getByDate: (date) => db.logs.where('date').equals(date).toArray(),
 }
