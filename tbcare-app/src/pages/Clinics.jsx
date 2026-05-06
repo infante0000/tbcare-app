@@ -51,21 +51,21 @@ export default function Clinics() {
 
       <div className="px-4 py-4 space-y-3">
         {clinics.length === 0 ? (
-          <p className="text-center text-gray-400 text-sm py-6">No clinics saved yet</p>
+          <p className="text-center text-gray-400 dark:text-slate-500 text-sm py-6">No clinics saved yet</p>
         ) : (
           clinics.map((c) => (
-            <div key={c.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
+            <div key={c.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4">
               {editId === c.id ? (
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-sky-600 mb-1">Editing clinic</p>
                   {fields.map(({ key, label, placeholder }) => (
                     <div key={key}>
-                      <label className="text-xs text-gray-400 block mb-0.5">{label}</label>
+                      <label className="text-xs text-gray-400 dark:text-slate-500 block mb-0.5">{label}</label>
                       <input
                         value={editData[key] || ''}
                         onChange={(e) => setEditData({ ...editData, [key]: e.target.value })}
                         placeholder={placeholder}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                        className="w-full border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
                       />
                     </div>
                   ))}
@@ -86,8 +86,8 @@ export default function Clinics() {
                 <>
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-800 truncate">{c.clinicName}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{c.address}</p>
+                      <p className="font-medium text-gray-800 dark:text-slate-100 truncate">{c.clinicName}</p>
+                      <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{c.address}</p>
                     </div>
                     <div className="flex gap-1 ml-2 shrink-0">
                       <button onClick={() => startEdit(c)}
@@ -119,8 +119,8 @@ export default function Clinics() {
         )}
 
         {/* Add form */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 space-y-3">
-          <p className="text-sm font-medium text-gray-700">Add clinic</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 space-y-3">
+          <p className="text-sm font-medium text-gray-700 dark:text-slate-200">Add clinic</p>
 
           {error && (
             <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
@@ -133,7 +133,7 @@ export default function Clinics() {
                 value={form[key]}
                 onChange={(e) => setForm({ ...form, [key]: e.target.value })}
                 placeholder={placeholder}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                className="w-full border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
               />
             </div>
           ))}
