@@ -24,7 +24,7 @@ export default function App() {
 
   return (
     <BrowserRouter basename="/tbcare-app">
-      <div className="min-w-dvw mx-auto min-h-screen bg-slate-50 pb-16">
+      <div className="min-h-screen w-full bg-slate-50 pb-16">
         <Routes>
           <Route path="/"         element={<Dashboard />} />
           <Route path="/meds"     element={<Medicines />} />
