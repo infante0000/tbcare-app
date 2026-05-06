@@ -2,15 +2,15 @@ import Dexie from 'dexie'
 
 export const db = new Dexie('TBCareDB')
 
-db.version(2).stores({
+db.version(3).stores({
   medicines: '++id, genericName, brandName, dosage, quantity, reminderEnabled',
   clinics:   '++id, clinicName, address, contact, doctorName',
   diary:     '++id, date, notes, tag, severity, medicineId',
   reminders: '++id, medicineId, time, days, enabled, type',
   events:    '++id, name, date, adjusted, completed',
   tests:     '++id, testName, scheduledDate, result, notes',
-  // date: YYYY-MM-DD, intakeQty: how many tablets taken in one sitting
   logs:      '++id, medicineId, date, taken, intakeQty',
+  patient:   '++id, key, value',  // key-value store for patient info
 })
 
 // ─── MEDICINE OPERATIONS ───────────────────────────────────────
@@ -22,17 +22,14 @@ export const medicineOps = {
       ...medicine,
       quantity:        medicine.quantity || 0,
       totalQuantity:   medicine.quantity || 0,
-      intakeQty:       medicine.intakeQty || 1, // tablets per sitting
+      intakeQty:       medicine.intakeQty || 1,
       reminderEnabled: false,
       createdAt:       new Date().toISOString(),
     }),
 
-  // Full edit support
   update: (id, changes) => db.medicines.update(id, changes),
+  delete: (id)          => db.medicines.delete(id),
 
-  delete: (id) => db.medicines.delete(id),
-
-  // Decrement by intakeQty (e.g. 3 tablets at once)
   decrementQuantity: async (id, qty = 1) => {
     const med = await db.medicines.get(id)
     if (!med) return 0
@@ -41,93 +38,66 @@ export const medicineOps = {
     return newQty
   },
 
-  // Add quantity when refill is completed
   addQuantity: async (id, qty) => {
     const med = await db.medicines.get(id)
     if (!med) return 0
-    const newQty = (med.quantity || 0) + qty
+    const newQty   = (med.quantity || 0) + qty
     const newTotal = Math.max(med.totalQuantity || 0, newQty)
-    await db.medicines.update(id, {
-      quantity:      newQty,
-      totalQuantity: newTotal,
-    })
+    await db.medicines.update(id, { quantity: newQty, totalQuantity: newTotal })
     return newQty
   },
 }
 
 // ─── DIARY OPERATIONS ──────────────────────────────────────────
 export const diaryOps = {
-  getAll: () => db.diary.orderBy('date').reverse().toArray(),
-
+  getAll:    () => db.diary.orderBy('date').reverse().toArray(),
   getByDate: (date) => db.diary.where('date').equals(date).toArray(),
-
-  add: (entry) =>
-    db.diary.add({
-      ...entry,
-      date:      entry.date || new Date().toISOString().split('T')[0],
-      createdAt: new Date().toISOString(),
-    }),
-
-  // Edit support
+  add:       (entry) => db.diary.add({
+    ...entry,
+    date:      entry.date || new Date().toISOString().split('T')[0],
+    createdAt: new Date().toISOString(),
+  }),
   update: (id, changes) => db.diary.update(id, changes),
-
-  delete: (id) => db.diary.delete(id),
+  delete: (id)          => db.diary.delete(id),
 }
 
 // ─── CLINIC OPERATIONS ─────────────────────────────────────────
 export const clinicOps = {
   getAll: () => db.clinics.toArray(),
-
-  add: (clinic) =>
-    db.clinics.add({ ...clinic, createdAt: new Date().toISOString() }),
-
-  // Edit support
+  add:    (clinic) => db.clinics.add({ ...clinic, createdAt: new Date().toISOString() }),
   update: (id, changes) => db.clinics.update(id, changes),
-
-  delete: (id) => db.clinics.delete(id),
+  delete: (id)          => db.clinics.delete(id),
 }
 
 // ─── EVENT / SCHEDULE OPERATIONS ───────────────────────────────
 export const eventOps = {
-  getAll: () => db.events.orderBy('date').toArray(),
-
-  add: (event) => db.events.add({ ...event, completed: false }),
-
-  update: (id, changes) => db.events.update(id, changes),
-
-  delete: (id) => db.events.delete(id),
-
-  // Mark refill as done — also triggers quantity add in the page
-  complete: (id) => db.events.update(id, { completed: true }),
-
+  getAll:  () => db.events.orderBy('date').toArray(),
+  getAll_: () => db.events.orderBy('date').reverse().toArray(),
+  add:     (event) => db.events.add({ ...event, completed: false }),
+  update:  (id, changes) => db.events.update(id, changes),
+  delete:  (id)          => db.events.delete(id),
+  complete: (id)         => db.events.update(id, { completed: true }),
   getUpcoming: async () => {
     const today = new Date().toISOString().split('T')[0]
     const all   = await db.events.orderBy('date').toArray()
     return all.filter((e) => e.date >= today && !e.completed)
   },
-
-  getAll_: () => db.events.orderBy('date').reverse().toArray(),
 }
 
 // ─── TEST RESULT OPERATIONS ────────────────────────────────────
 export const testOps = {
   getAll: () => db.tests.orderBy('scheduledDate').reverse().toArray(),
-
-  add: (test) =>
-    db.tests.add({
-      ...test,
-      scheduledDate: test.scheduledDate || new Date().toISOString().split('T')[0],
-      createdAt:     new Date().toISOString(),
-    }),
-
+  add:    (test) => db.tests.add({
+    ...test,
+    scheduledDate: test.scheduledDate || new Date().toISOString().split('T')[0],
+    createdAt:     new Date().toISOString(),
+  }),
   update: (id, changes) => db.tests.update(id, changes),
-
-  delete: (id) => db.tests.delete(id),
+  delete: (id)          => db.tests.delete(id),
 }
 
 // ─── DOSE LOG / STREAK OPERATIONS ─────────────────────────────
 export const logOps = {
-  // Check if a specific medicine was already logged on a given date
   alreadyLogged: async (medicineId, date) => {
     const existing = await db.logs
       .where('date').equals(date)
@@ -136,23 +106,20 @@ export const logOps = {
     return !!existing
   },
 
-  // Kept for backward compat
   alreadyLoggedToday: async (medicineId) => {
     const today = new Date().toISOString().split('T')[0]
     return logOps.alreadyLogged(medicineId, today)
   },
 
-  // Log a dose — supports any past date and custom intakeQty
   logDose: (medicineId, date, intakeQty = 1) =>
     db.logs.add({
       medicineId,
       date,
-      taken:     true,
+      taken:    true,
       intakeQty,
-      loggedAt:  new Date().toISOString(),
+      loggedAt: new Date().toISOString(),
     }),
 
-  // Remove a log entry (undo)
   removeLog: async (medicineId, date) => {
     const log = await db.logs
       .where('date').equals(date)
@@ -165,7 +132,7 @@ export const logOps = {
     const logs = await db.logs.orderBy('date').reverse().toArray()
     if (!logs.length) return 0
     const uniqueDates = [...new Set(logs.map((l) => l.date))].sort().reverse()
-    let streak  = 0
+    let streak = 0
     let current = new Date()
     current.setHours(0, 0, 0, 0)
     for (const dateStr of uniqueDates) {
@@ -192,6 +159,60 @@ export const logOps = {
     }))
   },
 
-  // Get all logs for a specific date
+  getAll: () => db.logs.orderBy('date').reverse().toArray(),
+
   getByDate: (date) => db.logs.where('date').equals(date).toArray(),
+}
+
+// ─── PATIENT INFO ──────────────────────────────────────────────
+export const patientOps = {
+  get: async () => {
+    const rows = await db.patient.toArray()
+    const info = {}
+    rows.forEach((r) => { info[r.key] = r.value })
+    return info
+  },
+
+  set: async (data) => {
+    // Upsert each key
+    for (const [key, value] of Object.entries(data)) {
+      const existing = await db.patient.where('key').equals(key).first()
+      if (existing) {
+        await db.patient.update(existing.id, { value })
+      } else {
+        await db.patient.add({ key, value })
+      }
+    }
+  },
+}
+
+// ─── CLEAR / RESET OPERATIONS ─────────────────────────────────
+export const clearOps = {
+  clearLogs:      () => db.logs.clear(),
+  clearDiary:     () => db.diary.clear(),
+  clearMedicines: async () => {
+    await db.medicines.clear()
+    await db.logs.clear()      // logs reference medicines
+    await db.reminders.clear()
+  },
+  clearSchedule:  async () => {
+    await db.events.clear()
+    await db.tests.clear()
+  },
+  clearClinics:   () => db.clinics.clear(),
+  clearPatient:   () => db.patient.clear(),
+
+  // Nuclear reset — wipes everything
+  clearAll: async () => {
+    await Promise.all([
+      db.medicines.clear(),
+      db.clinics.clear(),
+      db.diary.clear(),
+      db.reminders.clear(),
+      db.events.clear(),
+      db.tests.clear(),
+      db.logs.clear(),
+      db.patient.clear(),
+    ])
+  },
 }
