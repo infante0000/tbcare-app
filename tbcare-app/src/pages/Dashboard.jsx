@@ -114,14 +114,14 @@ export default function Dashboard() {
       <div className="px-4 py-4 space-y-4">
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 text-center">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center">
             <div className="flex items-center justify-center gap-1 text-orange-400 mb-1">
               <Flame size={18} />
               <span className="text-2xl font-semibold text-gray-800">{streak}</span>
             </div>
             <p className="text-xs text-gray-500">Day streak</p>
           </div>
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 text-center">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <Pill size={18} className="text-sky-400" />
               <span className="text-2xl font-semibold text-gray-800">
@@ -133,7 +133,7 @@ export default function Dashboard() {
         </div>
 
         {/* Adherence dots */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4">
           <p className="text-sm font-medium text-gray-700 mb-3">Last 7 days</p>
           <div className="flex gap-2">
             {adherence.map(({ date, taken }) => (
@@ -143,7 +143,7 @@ export default function Dashboard() {
                     ? 'bg-sky-500 text-white'
                     : taken
                     ? 'bg-green-100 text-green-700'
-                    : 'bg-gray-100 text-gray-400'}`}
+                    : 'bg-gray-100 dark:bg-slate-700 text-gray-400'}`}
                 >
                   {new Date(date + 'T00:00:00').getDate()}
                 </div>
@@ -156,7 +156,7 @@ export default function Dashboard() {
         </div>
 
         {/* Today's medicines */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4">
           {/* Date picker for past logging */}
           <div className="flex items-center justify-between mb-3">
             <p className="text-sm font-medium text-gray-700">Medicines</p>
@@ -167,7 +167,7 @@ export default function Dashboard() {
                 value={logDate}
                 max={today}
                 onChange={(e) => setLogDate(e.target.value)}
-                className="text-xs border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-sky-400"
+                className="text-xs border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-sky-400"
               />
             </div>
           </div>
@@ -215,7 +215,7 @@ export default function Dashboard() {
                   const taken = takenMap[med.id]
 
                   return (
-                    <div key={med.id} className="border border-gray-100 rounded-xl p-3">
+                    <div key={med.id} className="border border-gray-100 dark:border-slate-700 rounded-xl p-3">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-gray-800 truncate">
@@ -247,7 +247,7 @@ export default function Dashboard() {
                                 [med.id]: Math.max(1, (prev[med.id] || 1) - 1),
                               }))
                             }
-                            className="w-6 h-6 rounded-md bg-gray-100 text-gray-600 text-sm font-bold flex items-center justify-center"
+                            className="w-6 h-6 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-600 text-sm font-bold flex items-center justify-center"
                           >
                             −
                           </button>
@@ -261,7 +261,7 @@ export default function Dashboard() {
                                 [med.id]: (prev[med.id] || 1) + 1,
                               }))
                             }
-                            className="w-6 h-6 rounded-md bg-gray-100 text-gray-600 text-sm font-bold flex items-center justify-center"
+                            className="w-6 h-6 rounded-md bg-gray-100 dark:bg-slate-700 text-gray-600 text-sm font-bold flex items-center justify-center"
                           >
                             +
                           </button>
@@ -269,7 +269,7 @@ export default function Dashboard() {
                       </div>
 
                       {/* Quantity bar */}
-                      <div className="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="mt-2 h-1.5 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full ${barColor}`}
                           style={{ width: `${Math.min(100, pct)}%` }}
@@ -293,7 +293,7 @@ export default function Dashboard() {
 
         {/* Next refill */}
         <div
-          className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 flex items-center gap-3 cursor-pointer"
+          className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 flex items-center gap-3 cursor-pointer"
           onClick={() => navigate('/schedule')}
         >
           <div className="bg-amber-50 p-2 rounded-lg">
