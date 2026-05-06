@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Trash2, CheckCircle, Plus } from 'lucide-react'
+import { Trash2, CheckCircle, Plus, Pencil } from 'lucide-react'
 import { eventOps, testOps, medicineOps } from '../db/database'
 import { adjustForHoliday, isHoliday, getHolidayName } from '../utils/holidays'
-import { Trash2, CheckCircle, Plus, Pencil } from 'lucide-react'
 
 export default function Schedule() {
   const [events,      setEvents]      = useState([])
