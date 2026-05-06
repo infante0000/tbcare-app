@@ -60,7 +60,7 @@ export default function Diary() {
 
       <div className="px-4 py-4 space-y-3">
         {/* Add entry */}
-        <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 space-y-3">
           <p className="text-sm font-medium text-gray-700">New entry</p>
 
           {error && (
@@ -129,7 +129,7 @@ export default function Diary() {
           <p className="text-center text-gray-400 text-sm py-6">No entries yet</p>
         ) : (
           entries.map((entry) => (
-            <div key={entry.id} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div key={entry.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
               {editId === entry.id ? (
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-sky-600">Editing entry</p>

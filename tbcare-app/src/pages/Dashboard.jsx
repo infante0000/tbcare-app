@@ -114,14 +114,14 @@ export default function Dashboard() {
       <div className="px-4 py-4 space-y-4">
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white rounded-xl border border-gray-100 p-4 text-center">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 text-center">
             <div className="flex items-center justify-center gap-1 text-orange-400 mb-1">
               <Flame size={18} />
               <span className="text-2xl font-semibold text-gray-800">{streak}</span>
             </div>
             <p className="text-xs text-gray-500">Day streak</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 p-4 text-center">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <Pill size={18} className="text-sky-400" />
               <span className="text-2xl font-semibold text-gray-800">
@@ -133,7 +133,7 @@ export default function Dashboard() {
         </div>
 
         {/* Adherence dots */}
-        <div className="bg-white rounded-xl border border-gray-100 p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
           <p className="text-sm font-medium text-gray-700 mb-3">Last 7 days</p>
           <div className="flex gap-2">
             {adherence.map(({ date, taken }) => (
@@ -156,7 +156,7 @@ export default function Dashboard() {
         </div>
 
         {/* Today's medicines */}
-        <div className="bg-white rounded-xl border border-gray-100 p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
           {/* Date picker for past logging */}
           <div className="flex items-center justify-between mb-3">
             <p className="text-sm font-medium text-gray-700">Medicines</p>
@@ -293,7 +293,7 @@ export default function Dashboard() {
 
         {/* Next refill */}
         <div
-          className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-3 cursor-pointer"
+          className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 flex items-center gap-3 cursor-pointer"
           onClick={() => navigate('/schedule')}
         >
           <div className="bg-amber-50 p-2 rounded-lg">

@@ -96,7 +96,7 @@ export default function Medicines() {
             const isEditing = editId === med.id
 
             return (
-              <div key={med.id} className="bg-white rounded-xl border border-gray-100 p-4">
+              <div key={med.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
                 {isEditing ? (
                   /* ── EDIT MODE ── */
                   <div className="space-y-2">
@@ -248,7 +248,7 @@ export default function Medicines() {
         )}
 
         {/* Add form */}
-        <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 space-y-3">
           <p className="text-sm font-medium text-gray-700">Add new medicine</p>
 
           {error && (

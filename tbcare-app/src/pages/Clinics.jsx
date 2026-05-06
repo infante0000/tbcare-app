@@ -54,7 +54,7 @@ export default function Clinics() {
           <p className="text-center text-gray-400 text-sm py-6">No clinics saved yet</p>
         ) : (
           clinics.map((c) => (
-            <div key={c.id} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div key={c.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
               {editId === c.id ? (
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-sky-600 mb-1">Editing clinic</p>
@@ -119,7 +119,7 @@ export default function Clinics() {
         )}
 
         {/* Add form */}
-        <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 space-y-3">
           <p className="text-sm font-medium text-gray-700">Add clinic</p>
 
           {error && (

@@ -113,7 +113,7 @@ export default function Schedule() {
 
       <div className="px-4 py-4 space-y-4">
         {/* Calendar */}
-        <div className="bg-white rounded-xl border border-gray-100 p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
           <p className="text-sm font-medium text-gray-700 mb-3">{monthName}</p>
           <div className="grid grid-cols-7 gap-1 mb-1">
             {['Su','Mo','Tu','We','Th','Fr','Sa'].map((d) => (
@@ -155,7 +155,7 @@ export default function Schedule() {
         </div>
 
         {/* Add event */}
-        <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 space-y-3">
           <p className="text-sm font-medium text-gray-700">Add refill or appointment</p>
 
           {error && (
@@ -240,7 +240,7 @@ export default function Schedule() {
             <div className="space-y-2">
               {events.map((ev) => (
                 <div key={ev.id}
-                  className="bg-white rounded-xl border border-gray-100 p-3 flex items-center justify-between gap-2"
+                  className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-3 flex items-center justify-between gap-2"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-800 truncate">{ev.name}</p>
@@ -275,7 +275,7 @@ export default function Schedule() {
         </div>
 
         {/* Test results */}
-        <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 space-y-3">
           <p className="text-sm font-medium text-gray-700">Test results</p>
 
           {tests.length > 0 && (
