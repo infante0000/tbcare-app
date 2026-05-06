@@ -78,7 +78,7 @@ define(['./workbox-25613826'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "/tbcare-app/index.html",
-    "revision": "0.psd60pm55bk"
+    "revision": "0.cbsrrt40avs"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("/tbcare-app/index.html"), {
