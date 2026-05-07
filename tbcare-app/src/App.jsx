@@ -7,6 +7,7 @@ import Diary     from './pages/Diary'
 import Schedule  from './pages/Schedule'
 import History   from './pages/History'
 import Settings  from './pages/Settings'
+import Clinics from './pages/Clinics'
 import {
   requestNotificationPermission,
   rescheduleAllReminders,
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/schedule"  element={<Schedule />}  />
           <Route path="/history"   element={<History />}   />
           <Route path="/settings"  element={<Settings />}  />
+          <Route path="/clinics" element={<Clinics />} />
         </Routes>
         <BottomNav />
       </div>
