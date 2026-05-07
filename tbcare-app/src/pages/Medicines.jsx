@@ -83,7 +83,7 @@ export default function Medicines() {
 
       <div className="px-4 py-4 space-y-3">
         {medicines.length === 0 ? (
-          <p className="text-center text-gray-400 text-sm py-6">
+          <p className="text-center text-gray-400 dark:text-slate-500 text-sm py-6">
             No medicines added yet
           </p>
         ) : (
@@ -96,7 +96,7 @@ export default function Medicines() {
             const isEditing = editId === med.id
 
             return (
-              <div key={med.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
+              <div key={med.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4">
                 {isEditing ? (
                   /* ── EDIT MODE ── */
                   <div className="space-y-2">
@@ -108,20 +108,20 @@ export default function Medicines() {
                       { key: 'sideEffects', label: 'Side effects', placeholder: 'e.g. Nausea'      },
                     ].map(({ key, label, placeholder }) => (
                       <div key={key}>
-                        <label className="text-xs text-gray-400 block mb-0.5">{label}</label>
+                        <label className="text-xs text-gray-400 dark:text-slate-500block mb-0.5">{label}</label>
                         <input
                           value={editData[key] || ''}
                           onChange={(e) =>
                             setEditData({ ...editData, [key]: e.target.value })
                           }
                           placeholder={placeholder}
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                          className="w-full border dark:bg-slate-700 dark:text-slate-200 border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
                         />
                       </div>
                     ))}
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label className="text-xs text-gray-400 block mb-0.5">
+                        <label className="text-xs text-gray-400 dark:text-slate-500block mb-0.5">
                           Reminder time
                         </label>
                         <input
@@ -130,11 +130,11 @@ export default function Medicines() {
                           onChange={(e) =>
                             setEditData({ ...editData, reminderTime: e.target.value })
                           }
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                          className="w-full border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
                         />
                       </div>
                       <div>
-                        <label className="text-xs text-gray-400 block mb-0.5">
+                        <label className="text-xs text-gray-400 dark:text-slate-500 block mb-0.5">
                           Default tablets/sitting
                         </label>
                         <input
@@ -144,7 +144,7 @@ export default function Medicines() {
                           onChange={(e) =>
                             setEditData({ ...editData, intakeQty: e.target.value })
                           }
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                          className="w-full border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
                         />
                       </div>
                     </div>
@@ -157,7 +157,7 @@ export default function Medicines() {
                       </button>
                       <button
                         onClick={cancelEdit}
-                        className="flex-1 flex items-center justify-center gap-1 border border-gray-200 text-gray-500 py-2 rounded-lg text-sm"
+                        className="flex-1 flex items-center justify-center gap-1 border border-gray-200 dark:border-slate-600 text-gray-500 py-2 rounded-lg text-sm"
                       >
                         <X size={14} /> Cancel
                       </button>
@@ -172,7 +172,7 @@ export default function Medicines() {
                           <Pill size={18} className="text-sky-500" />
                         </div>
                         <div className="min-w-0">
-                          <p className="font-medium text-gray-800 truncate">
+                          <p className="font-medium text-gray-800 dark:text-slate-100 truncate">
                             {med.genericName}
                             {(med.quantity || 0) <= 5 && (
                               <span className="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">
@@ -180,7 +180,7 @@ export default function Medicines() {
                               </span>
                             )}
                           </p>
-                          <p className="text-xs text-gray-400">
+                          <p className="text-xs text-gray-400 dark:text-slate-500">
                             {med.brandName} · {med.dosage}
                           </p>
                           {med.sideEffects && (
@@ -210,19 +210,19 @@ export default function Medicines() {
                     </div>
 
                     {/* Quantity bar */}
-                    <div className="mt-3 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="mt-3 h-1.5 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full ${barColor}`}
                         style={{ width: `${Math.min(100, pct)}%` }}
                       />
                     </div>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">
                       {med.quantity || 0} of {med.totalQuantity || 0} tablets remaining
                     </p>
 
                     {/* Add quantity (refill) */}
                     <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-50">
-                      <span className="text-xs text-gray-400 shrink-0">Add refill qty:</span>
+                      <span className="text-xs text-gray-400 dark:text-slate-500 shrink-0">Add refill qty:</span>
                       <input
                         type="number"
                         min="1"
@@ -231,7 +231,7 @@ export default function Medicines() {
                         onChange={(e) =>
                           setAddQtyMap((prev) => ({ ...prev, [med.id]: e.target.value }))
                         }
-                        className="flex-1 border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:border-sky-400"
+                        className="flex-1 border dark:bg-slate-700 dark:text-slate-200 border-gray-200 dark:border-slate-600 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:border-sky-400"
                       />
                       <button
                         onClick={() => handleAddQty(med)}
@@ -248,8 +248,8 @@ export default function Medicines() {
         )}
 
         {/* Add form */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 space-y-3">
-          <p className="text-sm font-medium text-gray-700">Add new medicine</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 space-y-3">
+          <p className="text-sm font-medium text-gray-700 dark:text-slate-200">Add new medicine</p>
 
           {error && (
             <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
@@ -267,7 +267,7 @@ export default function Medicines() {
                 value={form[key]}
                 onChange={(e) => setForm({ ...form, [key]: e.target.value })}
                 placeholder={placeholder}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                className="w-full border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
               />
             </div>
           ))}
@@ -280,7 +280,7 @@ export default function Medicines() {
                 value={form.quantity}
                 onChange={(e) => setForm({ ...form, quantity: e.target.value })}
                 placeholder="30"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                className="w-full border dark:bg-slate-700 dark:text-slate-200 border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
               />
             </div>
             <div>
@@ -291,7 +291,7 @@ export default function Medicines() {
                 value={form.intakeQty}
                 onChange={(e) => setForm({ ...form, intakeQty: e.target.value })}
                 placeholder="1"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                className="w-full border dark:bg-slate-700 dark:text-slate-200 border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
               />
             </div>
             <div>
@@ -300,7 +300,7 @@ export default function Medicines() {
                 type="time"
                 value={form.reminderTime}
                 onChange={(e) => setForm({ ...form, reminderTime: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                className="w-full dark:bg-slate-700 dark:text-slate-200 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
               />
             </div>
           </div>

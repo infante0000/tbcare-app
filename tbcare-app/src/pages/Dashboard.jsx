@@ -117,14 +117,14 @@ export default function Dashboard() {
           <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center">
             <div className="flex items-center justify-center gap-1 text-orange-400 mb-1">
               <Flame size={18} />
-              <span className="text-2xl font-semibold text-gray-800">{streak}</span>
+              <span className="text-2xl font-semibold text-gray-800 dark:text-slate-100">{streak}</span>
             </div>
             <p className="text-xs text-gray-500">Day streak</p>
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <Pill size={18} className="text-sky-400" />
-              <span className="text-2xl font-semibold text-gray-800">
+              <span className="text-2xl font-semibold text-gray-800 dark:text-slate-100">
                 {medicines.length}
               </span>
             </div>
@@ -134,7 +134,7 @@ export default function Dashboard() {
 
         {/* Adherence dots */}
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4">
-          <p className="text-sm font-medium text-gray-700 mb-3">Last 7 days</p>
+          <p className="text-sm font-medium text-gray-700 dark:text-slate-200 mb-3">Last 7 days</p>
           <div className="flex gap-2">
             {adherence.map(({ date, taken }) => (
               <div key={date} className="flex-1 flex flex-col items-center gap-1">
@@ -143,7 +143,7 @@ export default function Dashboard() {
                     ? 'bg-sky-500 text-white'
                     : taken
                     ? 'bg-green-100 text-green-700'
-                    : 'bg-gray-100 dark:bg-slate-700 text-gray-400'}`}
+                    : 'bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-slate-500'}`}
                 >
                   {new Date(date + 'T00:00:00').getDate()}
                 </div>
@@ -159,9 +159,9 @@ export default function Dashboard() {
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4">
           {/* Date picker for past logging */}
           <div className="flex items-center justify-between mb-3">
-            <p className="text-sm font-medium text-gray-700">Medicines</p>
+            <p className="text-sm font-medium text-gray-700 dark:text-slate-200">Medicines</p>
             <div className="flex items-center gap-2">
-              <label className="text-xs text-gray-400">Date:</label>
+              <label className="text-xs text-gray-400 dark:text-slate-500">Date:</label>
               <input
                 type="date"
                 value={logDate}
@@ -218,10 +218,10 @@ export default function Dashboard() {
                     <div key={med.id} className="border border-gray-100 dark:border-slate-700 rounded-xl p-3">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-800 truncate">
+                          <p className="text-sm font-medium text-gray-800 dark:text-slate-100 truncate">
                             {med.genericName}
                           </p>
-                          <p className="text-xs text-gray-400">
+                          <p className="text-xs text-gray-400 dark:text-slate-500">
                             {med.dosage} · {med.reminderTime || '08:00'}
                           </p>
                         </div>
@@ -238,7 +238,7 @@ export default function Dashboard() {
 
                       {/* Intake quantity selector */}
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="text-xs text-gray-400">Tablets this sitting:</span>
+                        <span className="text-xs text-gray-400 dark:text-slate-500">Tablets this sitting:</span>
                         <div className="flex items-center gap-1">
                           <button
                             onClick={() =>
@@ -251,7 +251,7 @@ export default function Dashboard() {
                           >
                             −
                           </button>
-                          <span className="text-sm font-medium text-gray-800 w-6 text-center">
+                          <span className="text-sm font-medium text-gray-800 dark:text-slate-100 w-6 text-center">
                             {intakeQtys[med.id] || med.intakeQty || 1}
                           </span>
                           <button
@@ -300,8 +300,8 @@ export default function Dashboard() {
             <CalendarDays size={20} className="text-amber-500" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-700">Next event</p>
-            <p className="text-xs text-gray-400 truncate">
+            <p className="text-sm font-medium text-gray-700 dark:text-slate-200">Next event</p>
+            <p className="text-xs text-gray-400 dark:text-slate-500 truncate">
               {upcoming ? `${upcoming.name} · ${upcoming.date}` : 'No upcoming events'}
             </p>
           </div>

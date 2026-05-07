@@ -113,11 +113,11 @@ export default function Schedule() {
 
       <div className="px-4 py-4 space-y-4">
         {/* Calendar */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
-          <p className="text-sm font-medium text-gray-700 mb-3">{monthName}</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4">
+          <p className="text-sm font-medium text-gray-700 dark:text-slate-200 mb-3">{monthName}</p>
           <div className="grid grid-cols-7 gap-1 mb-1">
             {['Su','Mo','Tu','We','Th','Fr','Sa'].map((d) => (
-              <div key={d} className="text-center text-xs text-gray-400 py-1">{d}</div>
+              <div key={d} className="text-center text-xs text-gray-400 dark:text-slate-500 py-1">{d}</div>
             ))}
           </div>
           <div className="grid grid-cols-7 gap-1">
@@ -148,15 +148,15 @@ export default function Schedule() {
             ].map(({ color, label }) => (
               <div key={label} className="flex items-center gap-1">
                 <div className={`w-3 h-3 rounded-sm ${color}`} />
-                <span className="text-xs text-gray-400">{label}</span>
+                <span className="text-xs text-gray-400 dark:text-slate-500">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Add event */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 space-y-3">
-          <p className="text-sm font-medium text-gray-700">Add refill or appointment</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 space-y-3">
+          <p className="text-sm font-medium text-gray-700 dark:text-slate-200">Add refill or appointment</p>
 
           {error && (
             <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
@@ -168,7 +168,7 @@ export default function Schedule() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Medicine refill, Sputum test"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+              className="w-full border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
             />
           </div>
 
@@ -178,7 +178,7 @@ export default function Schedule() {
               type="date"
               value={date}
               onChange={(e) => handleDateChange(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+              className="w-full border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
             />
             {adjusted && (
               <p className="text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-lg mt-2">
@@ -196,7 +196,7 @@ export default function Schedule() {
             <select
               value={linkedMed}
               onChange={(e) => setLinkedMed(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+              className="w-full border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
             >
               <option value="">— None —</option>
               {medicines.map((m) => (
@@ -216,7 +216,7 @@ export default function Schedule() {
                 value={refillQty}
                 onChange={(e) => setRefillQty(e.target.value)}
                 placeholder="e.g. 30"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                className="w-full border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
               />
             </div>
           )}
@@ -235,16 +235,16 @@ export default function Schedule() {
             Upcoming
           </p>
           {events.length === 0 ? (
-            <p className="text-center text-gray-400 text-sm py-4">No upcoming events</p>
+            <p className="text-center text-gray-400 dark:text-slate-500 text-sm py-4">No upcoming events</p>
           ) : (
             <div className="space-y-2">
               {events.map((ev) => (
                 <div key={ev.id}
-                  className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-3 flex items-center justify-between gap-2"
+                  className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-3 flex items-center justify-between gap-2"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-800 truncate">{ev.name}</p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-sm font-medium text-gray-800 dark:text-slate-100 truncate">{ev.name}</p>
+                    <p className="text-xs text-gray-400 dark:text-slate-500">
                       {ev.date}
                       {ev.adjusted && <span className="ml-1 text-amber-500">(adjusted)</span>}
                       {ev.medicineId && ev.refillQty > 0 && (
@@ -275,8 +275,8 @@ export default function Schedule() {
         </div>
 
         {/* Test results */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 space-y-3">
-          <p className="text-sm font-medium text-gray-700">Test results</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 space-y-3">
+          <p className="text-sm font-medium text-gray-700 dark:text-slate-200">Test results</p>
 
           {tests.length > 0 && (
             <div className="space-y-2 mb-2">
@@ -287,12 +287,12 @@ export default function Schedule() {
                       <input
                         value={editTest.testName}
                         onChange={(e) => setEditTest({ ...editTest, testName: e.target.value })}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                        className="w-full border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
                       />
                       <input
                         value={editTest.result}
                         onChange={(e) => setEditTest({ ...editTest, result: e.target.value })}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                        className="w-full border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
                       />
                       <input
                         type="date"
@@ -300,7 +300,7 @@ export default function Schedule() {
                         onChange={(e) =>
                           setEditTest({ ...editTest, scheduledDate: e.target.value })
                         }
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                        className="w-full border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
                       />
                       <div className="flex gap-2">
                         <button onClick={saveEditTest}
@@ -308,7 +308,7 @@ export default function Schedule() {
                           Save
                         </button>
                         <button onClick={cancelEditTest}
-                          className="flex-1 border border-gray-200 text-gray-500 py-2 rounded-lg text-sm">
+                          className="flex-1 border border-gray-200 dark:border-slate-600 text-gray-500 py-2 rounded-lg text-sm">
                           Cancel
                         </button>
                       </div>
@@ -316,8 +316,8 @@ export default function Schedule() {
                   ) : (
                     <div className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
                       <div>
-                        <p className="text-sm text-gray-800">{t.testName}</p>
-                        <p className="text-xs text-gray-400">{t.scheduledDate}</p>
+                        <p className="text-sm text-gray-800 dark:text-slate-100">{t.testName}</p>
+                        <p className="text-xs text-gray-400 dark:text-slate-500">{t.scheduledDate}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-xs bg-sky-100 text-sky-700 px-2 py-1 rounded-full">
@@ -344,21 +344,21 @@ export default function Schedule() {
               <label className="text-xs text-gray-500 block mb-1">Test name</label>
               <input value={testName} onChange={(e) => setTestName(e.target.value)}
                 placeholder="e.g. Sputum smear, Chest X-ray"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                className="w-full border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
               />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">Result</label>
               <input value={testResult} onChange={(e) => setTestResult(e.target.value)}
                 placeholder="e.g. Negative, Positive"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                className="w-full border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
               />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">Test date</label>
               <input type="date" value={testDate}
                 onChange={(e) => setTestDate(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                className="w-full border dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
               />
             </div>
             <button onClick={handleAddTest}

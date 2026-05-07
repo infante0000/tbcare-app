@@ -60,8 +60,8 @@ export default function Diary() {
 
       <div className="px-4 py-4 space-y-3">
         {/* Add entry */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4 space-y-3">
-          <p className="text-sm font-medium text-gray-700">New entry</p>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 space-y-3">
+          <p className="text-sm font-medium text-gray-700 dark:text-slate-200">New entry</p>
 
           {error && (
             <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
@@ -74,7 +74,7 @@ export default function Diary() {
               value={entryDate}
               max={today}
               onChange={(e) => setEntryDate(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+              className="w-full border dark:bg-slate-700 dark:text-slate-200 border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
             />
           </div>
 
@@ -84,7 +84,7 @@ export default function Diary() {
               {TAGS.map((t) => (
                 <button key={t} onClick={() => setTag(t)}
                   className={`flex-1 py-2 rounded-lg border text-sm capitalize transition-colors
-                    ${tag === t ? tagStyle[t] : 'border-gray-200 text-gray-400'}`}
+                    ${tag === t ? tagStyle[t] : 'border-gray-200 dark:border-slate-600 text-gray-400 dark:text-slate-500'}`}
                 >
                   {t}
                 </button>
@@ -98,7 +98,7 @@ export default function Diary() {
               {SEVERITIES.map((s) => (
                 <button key={s} onClick={() => setSeverity(s)}
                   className={`flex-1 py-2 rounded-lg border text-sm capitalize transition-colors
-                    ${severity === s ? sevStyle[s] + ' border-transparent' : 'border-gray-200 text-gray-400'}`}
+                    ${severity === s ? sevStyle[s] + ' border-transparent' : 'border-gray-200 dark:border-slate-600 text-gray-400'}`}
                 >
                   {s}
                 </button>
@@ -113,7 +113,7 @@ export default function Diary() {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Describe what you experienced..."
               rows={3}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400 resize-none"
+              className="w-full border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400 resize-none"
             />
           </div>
 
@@ -126,10 +126,10 @@ export default function Diary() {
 
         {/* Entry list */}
         {entries.length === 0 ? (
-          <p className="text-center text-gray-400 text-sm py-6">No entries yet</p>
+          <p className="text-center text-gray-400 dark:text-slate-500 text-sm py-6">No entries yet</p>
         ) : (
           entries.map((entry) => (
-            <div key={entry.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-4">
+            <div key={entry.id} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-10 dark:border-slate-700 p-4">
               {editId === entry.id ? (
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-sky-600">Editing entry</p>
@@ -138,13 +138,13 @@ export default function Diary() {
                     value={editData.date}
                     max={today}
                     onChange={(e) => setEditData({ ...editData, date: e.target.value })}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
+                    className="w-full border dark:bg-slate-700 dark:text-slate-200 border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-sky-400"
                   />
                   <div className="flex gap-2">
                     {TAGS.map((t) => (
                       <button key={t} onClick={() => setEditData({ ...editData, tag: t })}
                         className={`flex-1 py-1.5 rounded-lg border text-sm capitalize
-                          ${editData.tag === t ? tagStyle[t] : 'border-gray-200 text-gray-400'}`}
+                          ${editData.tag === t ? tagStyle[t] : 'border-gray-200 dark:border-slate-600 text-gray-400 dark:text-slate-500'}`}
                       >
                         {t}
                       </button>
@@ -154,7 +154,7 @@ export default function Diary() {
                     {SEVERITIES.map((s) => (
                       <button key={s} onClick={() => setEditData({ ...editData, severity: s })}
                         className={`flex-1 py-1.5 rounded-lg border text-sm capitalize
-                          ${editData.severity === s ? sevStyle[s] + ' border-transparent' : 'border-gray-200 text-gray-400'}`}
+                          ${editData.severity === s ? sevStyle[s] + ' border-transparent' : 'border-gray-200 dark:border-slate-600 text-gray-400'}`}
                       >
                         {s}
                       </button>
@@ -184,7 +184,7 @@ export default function Diary() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        <span className="text-xs text-gray-400">{entry.date}</span>
+                        <span className="text-xs text-gray-400 dark:text-slate-500">{entry.date}</span>
                         <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${tagStyle[entry.tag]}`}>
                           {entry.tag}
                         </span>
@@ -192,7 +192,7 @@ export default function Diary() {
                           {entry.severity}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-700">{entry.notes}</p>
+                      <p className="text-sm text-gray-700 dark:text-slate-200">{entry.notes}</p>
                     </div>
                     <div className="flex gap-1 ml-2 shrink-0">
                       <button onClick={() => startEdit(entry)}
