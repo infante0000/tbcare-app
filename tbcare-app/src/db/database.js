@@ -1,4 +1,6 @@
 import Dexie from 'dexie'
+import { lastNLocalDays } from '../utils/dateUtils'
+import { lastNLocalDays, toLocalDateStr } from '../utils/dateUtils'
 
 export const db = new Dexie('TBCareDB')
 
@@ -111,14 +113,16 @@ export const logOps = {
     return logOps.alreadyLogged(medicineId, today)
   },
 
-  logDose: (medicineId, date, intakeQty = 1) =>
-    db.logs.add({
-      medicineId,
-      date,
-      taken:    true,
-      intakeQty,
-      loggedAt: new Date().toISOString(),
-    }),
+logDose: (medicineId, date, intakeQty = 1) => {
+  const safeDate = date || toLocalDateStr()
+  return db.logs.add({
+    medicineId,
+    date:     safeDate,
+    taken:    true,
+    intakeQty,
+    loggedAt: new Date().toISOString(),
+  })
+},
 
   removeLog: async (medicineId, date) => {
     const log = await db.logs
@@ -145,19 +149,14 @@ export const logOps = {
     return streak
   },
 
-  getLastNDays: async (n = 7) => {
-    const dates = []
-    for (let i = n - 1; i >= 0; i--) {
-      const d = new Date()
-      d.setDate(d.getDate() - i)
-      dates.push(d.toISOString().split('T')[0])
-    }
-    const all = await db.logs.toArray()
-    return dates.map((date) => ({
-      date,
-      taken: all.some((l) => l.date === date),
-    }))
-  },
+getLastNDays: async (n = 7) => {
+  const dates = lastNLocalDays(n)
+  const all   = await db.logs.toArray()
+  return dates.map((date) => ({
+    date,
+    taken: all.some((l) => l.date === date),
+  }))
+},
 
   getAll: () => db.logs.orderBy('date').reverse().toArray(),
 

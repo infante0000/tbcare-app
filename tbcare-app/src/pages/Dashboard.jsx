@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { Flame, Pill, CalendarDays, MapPin, CheckCheck } from 'lucide-react'
 import { medicineOps, logOps, eventOps, clinicOps } from '../db/database'
 import { showNotification } from '../utils/notifications'
+import { localToday, parseLocalDate, toLocalDateStr } from '../utils/dateUtils'
 
 export default function Dashboard() {
   const navigate  = useNavigate()
-  const today     = new Date().toISOString().split('T')[0]
+  const today     = localToday()
 
   const [medicines,   setMedicines]   = useState([])
   const [streak,      setStreak]      = useState(0)
@@ -14,7 +15,8 @@ export default function Dashboard() {
   const [upcoming,    setUpcoming]    = useState(null)
   const [clinic,      setClinic]      = useState(null)
   const [takenMap,    setTakenMap]    = useState({})   // { medId: bool }
-  const [logDate,     setLogDate]     = useState(today) // date picker for past logging
+  const today               = localToday()
+  const [logDate, setLogDate] = useState(today)
   // intakeQty per medicine for the selected logDate sitting
   const [intakeQtys,  setIntakeQtys]  = useState({})
 
@@ -96,8 +98,8 @@ export default function Dashboard() {
   const allTaken = medicines.length > 0 &&
     medicines.every((m) => takenMap[m.id])
 
-  const dateLabel = new Date().toLocaleDateString('en-PH', {
-    weekday: 'long', month: 'long', day: 'numeric',
+  const dateLabel = parseLocalDate(today).toLocaleDateString('en-PH', {
+  weekday: 'long', month: 'long', day: 'numeric',
   })
 
   return (
@@ -145,10 +147,10 @@ export default function Dashboard() {
                     ? 'bg-green-100 text-green-700'
                     : 'bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-slate-500'}`}
                 >
-                  {new Date(date + 'T00:00:00').getDate()}
+                  {parseLocalDate(date).getDate()}
                 </div>
                 <span className="text-xs text-gray-400">
-                  {new Date(date + 'T00:00:00').toLocaleDateString('en', { weekday: 'narrow' })}
+                  {parseLocalDate(date).toLocaleDateString('en', { weekday: 'narrow' })}
                 </span>
               </div>
             ))}
