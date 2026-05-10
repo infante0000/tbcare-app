@@ -15,7 +15,6 @@ export default function Dashboard() {
   const [upcoming,    setUpcoming]    = useState(null)
   const [clinic,      setClinic]      = useState(null)
   const [takenMap,    setTakenMap]    = useState({})   // { medId: bool }
-  const today               = localToday()
   const [logDate, setLogDate] = useState(today)
   // intakeQty per medicine for the selected logDate sitting
   const [intakeQtys,  setIntakeQtys]  = useState({})

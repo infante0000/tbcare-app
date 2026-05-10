@@ -1,5 +1,4 @@
 import Dexie from 'dexie'
-import { lastNLocalDays } from '../utils/dateUtils'
 import { lastNLocalDays, toLocalDateStr } from '../utils/dateUtils'
 
 export const db = new Dexie('TBCareDB')
