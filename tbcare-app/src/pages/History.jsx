@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { logOps, medicineOps } from '../db/database'
 import { CheckCircle2, XCircle, Calendar } from 'lucide-react'
+import { localToday, parseLocalDate, lastNLocalDays } from '../utils/dateUtils'
 
 const TABS = ['7 Days', 'All Time']
 
@@ -48,7 +49,7 @@ export default function History() {
   // Sorted dates descending
   const sortedDates = Object.keys(grouped).sort().reverse()
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = localToday()
 
   return (
     <div>
@@ -83,7 +84,7 @@ export default function History() {
               </p>
               <div className="grid grid-cols-7 gap-2">
                 {week.map(({ date, taken }) => {
-                  const d = new Date(date + 'T00:00:00')
+                  const d = parseLocalDate(date)
                   return (
                     <div key={date} className="flex flex-col items-center gap-1">
                       <div className={`w-full aspect-square rounded-xl flex items-center justify-center text-xs font-medium
